@@ -104,9 +104,9 @@ login2 = Fore.YELLOW + """███╗   ███╗ █████╗ ██�
 import requests
 
 def start_tor():
-    tor_path = "tor.exe"  # Adjust the path to where your tor.exe is located
+    tor_path = "tor.exe" 
     tor_process = subprocess.Popen([tor_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-    time.sleep(5)  # Give Tor time to start
+    time.sleep(5)
     return tor_process
 
 def tor_request(url):
@@ -116,7 +116,7 @@ def tor_request(url):
     }
     try:
         response = requests.get(url, proxies=proxies, timeout=30)
-        return response  # Return the entire response object
+        return response 
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return None
