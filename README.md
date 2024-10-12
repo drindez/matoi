@@ -73,6 +73,11 @@ methods
 -------
 This project is licensed under the MIT License. See the LICENSE file for details.
 
+## Disclaimer
+--------
+Using this tool against networks without authorization is illegal and unethical. The developers are not responsible for any misuse of the software.
+
+
 ```
 
 Thank you for using **Matoi**! Happy testing! 💻
