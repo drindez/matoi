@@ -1,5 +1,3 @@
-Here's the updated README with some design elements suitable for GitHub. I've included symbols for better formatting:
-
 # Matoi Network Attack System
 ===========================
 
