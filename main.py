@@ -7,7 +7,6 @@ import threading
 import os
 import pwinput
 from libs.fivem import resolve_cfx_url
-from mcstatus import JavaServer
 import subprocess
 import time
 
@@ -90,7 +89,8 @@ banner = Colorate.Horizontal(Colors.purple_to_blue, f"""                        
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣰⣟⣽⡿⠛⣩⠞⠁⠀⠀⣠⠞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢷⡀⠀⠘⢷⠀⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⡿⠋⠉⠙⠚⠋⠀⠀⠀⠈⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡇⠀⠀⢸⡇⠀⠀⠀⠀⠀⠀⠀
 ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡴⠟⠉⠉⠓⢲⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣧⠀⠀⢸⠁⠀⠀⠀⠀⠀⠀
-                        Matoi - RAMONA FLOWERS""".center(100), 1)
+                        𝕸𝖆𝖙𝖔𝖎 𝕹𝖊𝖙𝖜𝖔𝖗𝖐 ⚡
+                               ᴠᴇʀsɪᴏɴ: 1.0""".center(100), 1)
 
 
 login2 = Fore.YELLOW + """███╗   ███╗ █████╗ ████████╗ ██████╗ ██╗
@@ -104,7 +104,7 @@ login2 = Fore.YELLOW + """███╗   ███╗ █████╗ ██�
 import requests
 
 def start_tor():
-    tor_path = "tor.exe" 
+    tor_path = "tor.exe"
     tor_process = subprocess.Popen([tor_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     time.sleep(5)
     return tor_process
@@ -116,7 +116,7 @@ def tor_request(url):
     }
     try:
         response = requests.get(url, proxies=proxies, timeout=30)
-        return response 
+        return response
     except requests.exceptions.RequestException as e:
         print(f"Request failed: {e}")
         return None
@@ -189,12 +189,12 @@ def startup(user, password, tor):
     os.system("title Matoi network attack system!")
     print(banner)
     print("")
-    print("")
+    print(f"                {Fore.WHITE}Type `{Fore.LIGHTMAGENTA_EX}help{Fore.WHITE}` to display available commands.")
     print("")
     main(user, password, tor)
 
 def main(user, password, tor):
-    command = input(f"{Back.MAGENTA}{user} • Matoi:{Back.RESET}{Fore.RESET} ")
+    command = input(f"{Back.MAGENTA}{user} </> Matoi {Back.RESET}{Fore.RESET} ")
     if command == "methods":
         print("")
         print(f"{Fore.RED}V {Fore.WHITE}| !tcp-syn     {Fore.WHITE}[{Fore.GREEN}PROTECTED{Fore.WHITE}] TCP method with syn packet for greated bypassing")
@@ -230,7 +230,7 @@ def main(user, password, tor):
             print("")
             print(attackbanner)
             print("")
-            print(f"                     {Fore.LIGHTGREEN_EX}Attack sent!{Fore.RESET}")
+            print(f"                     {Fore.LIGHTGREEN_EX}𝓪𝓽𝓽𝓪𝓬𝓴 𝓼𝓮𝓷𝓽!{Fore.RESET}")
             print(f"                     IP: {Fore.LIGHTRED_EX}{ip}{Fore.RESET}")
             print(f"                     PORT: {Fore.LIGHTRED_EX}{port}{Fore.RESET}")
             print(f"                     TIME: {Fore.LIGHTRED_EX}{time}s{Fore.RESET}")
@@ -261,7 +261,7 @@ def main(user, password, tor):
         main(user, password, tor)
 
     if command == "clear":
-        clear(user, password)
+        clear(user, password, tor)
 
     if command.startswith("fivem"):
         parts = command.split()
@@ -320,8 +320,8 @@ def main(user, password, tor):
                 print("Tor is running.")
                 main(user, password, tor)
             else:
-            print("Tor isnt running.")
-            main(user, password, tor)
+                print("Tor isnt running.")
+                main(user, password, tor)
         else:
             print("Tor isnt running.")
             main(user, password, tor)
