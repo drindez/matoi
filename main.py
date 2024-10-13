@@ -8,6 +8,7 @@ import os
 import pwinput
 from libs.fivem import resolve_cfx_url
 import subprocess
+import requests
 import time
 
 
@@ -101,7 +102,53 @@ login2 = Fore.YELLOW + """███╗   ███╗ █████╗ ██�
 ╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝
                                          """ + Fore.RESET
 
-import requests
+
+
+def login(node, user=None, password=None):
+    tor = "on"
+
+    if os.path.exists('login.txt'):
+        with open('login.txt', 'r') as file:
+            credentials = file.read().strip().split(':')
+            if len(credentials) == 2:
+                user, password = credentials[0], credentials[1]
+                os.system("cls")
+                print("Using saved credentials for login.")
+            else:
+                os.system("cls")
+                print("Invalid credentials in login.txt. Please log in manually.")
+                return
+
+    if user is None or password is None:
+        os.system("cls || clear")
+        print(login2)
+        print("Welcome! Please login to your account, after this you will be logged autmaticaly!")
+        print("")
+        user = input("Enter username: ")
+        password = pwinput.pwinput(prompt = 'Enter the password: ', mask='*')
+
+    api_url = f"https://api.failed.lol/matoi/start?node={node}&user={user}&password={password}"
+    
+    try:
+        response = tor_request(api_url)
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            if "valid" in data and data["valid"]:
+                print("Login successful!")
+                with open('login.txt', 'w') as file:
+                    file.write(f"{user}:{password}")
+                clear(user, password, tor)
+            else:
+                print("Invalid user or incorrect credentials.")
+                if os.path.exists('login.txt'):
+                    os.remove('login.txt')
+        else:
+            print(f"Error: Received status code {response.status_code}")
+    
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred: {e}")
 
 def start_tor():
     tor_path = "tor.exe"
@@ -133,52 +180,6 @@ def load_addon(addon_name):
             print(f"{Fore.RED}Addon '{addon_name}' does not have a 'run' function.{Fore.RESET}")
     except Exception as e:
         print(f"{Fore.RED}Failed to load addon '{addon_name}': {e}{Fore.RESET}")
-
-def login(node, user=None, password=None):
-    tor = "off"
-
-    if os.path.exists('login.txt'):
-        with open('login.txt', 'r') as file:
-            credentials = file.read().strip().split(':')
-            if len(credentials) == 2:
-                user, password = credentials[0], credentials[1]
-                os.system("cls")
-                print("Using saved credentials for login.")
-            else:
-                os.system("cls")
-                print("Invalid credentials in login.txt. Please log in manually.")
-                return
-
-    if user is None or password is None:
-        os.system("cls || clear")
-        print(login2)
-        print("Welcome! Please login to your account, after this you will be logged autmaticaly!")
-        print("")
-        user = input("Enter username: ")
-        password = pwinput.pwinput(prompt = 'Enter the password: ', mask='*')
-
-    api_url = f"https://api.failed.lol/matoi/start?node={node}&user={user}&password={password}"
-    
-    try:
-        response = requests.get(api_url)
-        
-        if response.status_code == 200:
-            data = response.json()
-            
-            if "valid" in data and data["valid"]:
-                print("Login successful!")
-                with open('login.txt', 'w') as file:
-                    file.write(f"{user}:{password}")
-                clear(user, password, tor)
-            else:
-                print("Invalid user or incorrect credentials.")
-                if os.path.exists('login.txt'):
-                    os.remove('login.txt')
-        else:
-            print(f"Error: Received status code {response.status_code}")
-    
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
 
 def clear(user, password, tor):
     os.system("cls")
@@ -287,47 +288,9 @@ def main(user, password, tor):
             if response.status_code == 200:
                 data = response.json()
                 print(data["ip_address"])
-    if command.startswith("tor"):
-        parts = command.split()
-
-        if len(parts) != 2:
-            print(f"{Fore.RED}! Invalid command format. Expected: tor <on>{Fore.RESET}")
-            main(user, password, tor)
-        else:
-            tor, status = parts
-            if status == "on":
-                tor_process = start_tor()
-                print("Tor started in the background.")
-
-                url = "http://check.torproject.org"
-                response = tor_request(url)
-    
-                if response:
-                    print("Tor is working!")
-                    tor = "on"
-                    main(user, password, tor)
-                else:
-                    print("Failed to connect via Tor.")
-                    main(user, password, tor)
-            if status == "off":
-                tor = "off"
-                main(user, password, tor)
-    if command == "testtor":
-        url = "http://check.torproject.org"
-        response = tor_request(url)
-        if tor == "on":
-            if response:
-                print("Tor is running.")
-                main(user, password, tor)
-            else:
-                print("Tor isnt running.")
-                main(user, password, tor)
-        else:
-            print("Tor isnt running.")
-            main(user, password, tor)
     else:
         print("Unknow command")
         main(user, password, tor)
     
-
+tor_process = start_tor()
 login("node1")
