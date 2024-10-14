@@ -32,7 +32,7 @@ If you prefer manual installation, follow these steps:
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/matoi.git
+   git clone https://github.com/drindez/matoi.git
    ```
 2. Navigate into the directory:
    ```bash
