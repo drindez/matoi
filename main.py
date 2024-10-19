@@ -12,6 +12,8 @@ import requests
 import time
 import sys
 
+version_url = "https://raw.githubusercontent.com/drindez/matoi/refs/heads/main/version"
+local_version = "1.16"
 
 userinfobanner = Colorate.Horizontal(Colors.red_to_blue, """::..-%===%%%%%*+++*####**+++++++++++++***############%%%*-::::::::::::
 ::::+%+%%%%#++++++++++++++++++++++****************###############*::::
@@ -398,15 +400,31 @@ def main(user, password, tor):
     else:
         print("Unknow command")
         main(user, password, tor)
+def startconsole():
+    if sys.platform == "win32":
+        os.system('chcp 65001')
+        sys.stdout.reconfigure(encoding='utf-8')
+        print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
+        tor_process = start_tor()
+        login("node1")
+    else:
+        sys.stdout.reconfigure(encoding='utf-8')
+        print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
+        tor_process = start_tor()
+        login("node1")
 
-if sys.platform == "win32":
-    os.system('chcp 65001')
-    sys.stdout.reconfigure(encoding='utf-8')
-    print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
-    tor_process = start_tor()
-    login("node1")
-else:
-    sys.stdout.reconfigure(encoding='utf-8')
-    print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
-    tor_process = start_tor()
-    login("node1")
+def check_for_update():
+    try:
+        response = requests.get(version_url)
+        response.raise_for_status()  
+        remote_version = response.text.strip()
+
+        if remote_version != local_version:
+            print(f"Console is outdated. New version available: {remote_version}")
+        else:
+            print("Console is up to date.")
+            startconsole()
+    except requests.RequestException as e:
+        print(f"Error checking for updates: {e}")
+
+check_for_update()
