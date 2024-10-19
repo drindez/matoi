@@ -10,6 +10,7 @@ from libs.fivem import resolve_cfx_url
 import subprocess
 import requests
 import time
+import sys
 
 
 userinfobanner = Colorate.Horizontal(Colors.red_to_blue, """::..-%===%%%%%*+++*####**+++++++++++++***############%%%*-::::::::::::
@@ -397,7 +398,15 @@ def main(user, password, tor):
     else:
         print("Unknow command")
         main(user, password, tor)
-    
-print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
-tor_process = start_tor()
-login("node1")
+
+if sys.platform == "win32":
+    os.system('chcp 65001')
+    sys.stdout.reconfigure(encoding='utf-8')
+    print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
+    tor_process = start_tor()
+    login("node1")
+else:
+    sys.stdout.reconfigure(encoding='utf-8')
+    print(f"[MATOI-LOG] {Fore.GREEN}Pre-Starting tor client! This may take a while.")
+    tor_process = start_tor()
+    login("node1")
